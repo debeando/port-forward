@@ -51,10 +51,10 @@ func main() {
 	})
 
 	key, err := base64.StdEncoding.DecodeString(SSHKey)
-    if err != nil {
-        log.Error(err.Error())
-        os.Exit(2)
-    }
+	if err != nil {
+		log.Error(err.Error())
+		os.Exit(2)
+	}
 
 	signer, err := ssh.ParsePrivateKey(key)
 	if err != nil {
