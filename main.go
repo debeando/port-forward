@@ -1,16 +1,16 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
 	"io"
 	"net"
-	"path/filepath"
+	"os"
 
 	"github.com/debeando/go-common/env"
 	"github.com/debeando/go-common/log"
 
 	"golang.org/x/crypto/ssh"
-	"golang.org/x/crypto/ssh/knownhosts"
 )
 
 var Debug string
@@ -31,19 +31,35 @@ func init() {
 	SSHKey = env.Get("SSH_KEY", "")
 	SSHPort = env.Get("SSH_PORT", "22")
 	SSHUser = env.Get("SSH_USER", "ec2-user")
+
+	if Debug == "true" {
+		log.SetLevel(log.DebugLevel)
+	}
 }
 
 func main() {
-	knowHost := filepath.Join(env.Get("HOME", ""), ".ssh", "known_hosts")
+	log.Info("Start DeBeAndo Zenit Port Forward")
+	log.DebugWithFields("Environment Variables", log.Fields{
+		"DEBUG":       Debug,
+		"LOCAL_PORT":  LocalPort,
+		"REMOTE_HOST": RemoteHost,
+		"REMOTE_PORT": RemotePort,
+		"SSH_HOST":    SSHHost,
+		"SSH_KEY":     SSHKey,
+		"SSH_PORT":    SSHPort,
+		"SSH_USER":    SSHUser,
+	})
 
-	knownHostsCallback, err := knownhosts.New(knowHost)
+	key, err := base64.StdEncoding.DecodeString(SSHKey)
+    if err != nil {
+        log.Error(err.Error())
+        os.Exit(2)
+    }
+
+	signer, err := ssh.ParsePrivateKey(key)
 	if err != nil {
 		log.Error(err.Error())
-	}
-
-	signer, err := ssh.ParsePrivateKey([]byte(SSHKey))
-	if err != nil {
-		log.Error(err.Error())
+		os.Exit(3)
 	}
 
 	sshClient := &ssh.ClientConfig{
@@ -51,19 +67,21 @@ func main() {
 		Auth: []ssh.AuthMethod{
 			ssh.PublicKeys(signer),
 		},
-		HostKeyCallback:   knownHostsCallback,
+		HostKeyCallback:   ssh.InsecureIgnoreHostKey(),
 		HostKeyAlgorithms: []string{ssh.KeyAlgoED25519},
 	}
 
 	client, err := ssh.Dial("tcp", fmt.Sprintf("%s:%s", SSHHost, SSHPort), sshClient)
 	if err != nil {
 		log.Error(err.Error())
+		os.Exit(4)
 	}
 	defer client.Close()
 
-	listener, err := net.Listen("tcp", fmt.Sprintf("localhost:%s", LocalPort))
+	listener, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%s", LocalPort))
 	if err != nil {
 		log.Error(err.Error())
+		os.Exit(5)
 	}
 	defer listener.Close()
 
