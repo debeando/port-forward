@@ -11,7 +11,7 @@ This image is maintained by DeBeAndo and will be updated regularly on best-effor
 To run container:
 
 ```bash
-docker run --detach \
+docker run \
 	--name zenit-port-forward \
 	--publish 3306:3306 \
 	--env SSH_HOST="<ssh_host>" \
