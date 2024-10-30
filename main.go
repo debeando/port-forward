@@ -55,7 +55,6 @@ func main() {
 		HostKeyAlgorithms: []string{ssh.KeyAlgoED25519},
 	}
 
-
 	client, err := ssh.Dial("tcp", fmt.Sprintf("%s:%s", SSHHost, SSHPort), sshClient)
 	if err != nil {
 		log.Error(err.Error())
