@@ -1,4 +1,4 @@
-# DeBeAndo Zenit Port Forward
+# DeBeAndo Port Forward
 
 Port forward over SSH, allow connect to remote server over SSH to local or private kubernetes cluster.
 
@@ -12,10 +12,10 @@ To run container:
 
 ```bash
 docker run \
-	--name zenit-port-forward \
+	--name debeando-port-forward \
 	--publish 3306:3306 \
 	--env SSH_HOST="<ssh_host>" \
 	--env SSH_KEY="`cat /Users/<username>/.ssh/<private>.pem | base64`" \
 	--env REMOTE_HOST="<mysql_host>" \
-	debeando/zenit-port-forward
+	debeando/port-forward
 ```
