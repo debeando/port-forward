@@ -1,4 +1,4 @@
-module debeando/zenit-port-forward
+module debeando/port-forward
 
 go 1.23.2
 

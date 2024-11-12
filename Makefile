@@ -15,7 +15,7 @@ deps: ## Download dependencies
 build: ## Build binary for local operating system
 	@go env -w CGO_ENABLED="0"
 	@go generate ./...
-	@go build -ldflags "-s -w" -o zenit-port-forward main.go
+	@go build -ldflags "-s -w" -o port-forward main.go
 
 tests: ## Run tests
 	@go generate ./...

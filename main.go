@@ -38,7 +38,7 @@ func init() {
 }
 
 func main() {
-	log.Info("Start DeBeAndo Zenit Port Forward")
+	log.Info("Start DeBeAndo Port Forward")
 	log.DebugWithFields("Environment Variables", log.Fields{
 		"DEBUG":       Debug,
 		"LOCAL_PORT":  LocalPort,

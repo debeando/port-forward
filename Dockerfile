@@ -6,5 +6,5 @@ ENV CGO_ENABLED=0
 RUN go get -d -v
 RUN go build -o /go/bin/zenit-port-forward main.go
 FROM alpine:latest
-COPY --from=builder /go/bin/zenit-port-forward /zenit-port-forward
-ENTRYPOINT ["/zenit-port-forward"]
+COPY --from=builder /go/bin/port-forward /port-forward
+ENTRYPOINT ["/port-forward"]
